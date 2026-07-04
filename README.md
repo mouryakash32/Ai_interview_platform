@@ -1,4 +1,4 @@
-# AI Resume Analyzer
+# AI Interview & Resume Analyzer
 
 A full-stack AI-powered Resume Analyzer built using:
 
