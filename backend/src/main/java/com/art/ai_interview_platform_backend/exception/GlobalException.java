@@ -26,4 +26,14 @@ public class GlobalException {
             HttpServletRequest request) {
         return ResponseEntity.status(401).body("password error");
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object>handleRuntimeException(RuntimeException e){
+        return ResponseEntity.status(404).body(e.getMessage()  + "Run time exception");
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object>handleIllegalArgumentException(IllegalArgumentException e){
+        return ResponseEntity.status(404).body(e.getMessage() + "IllegalArgumentException occur");
+    }
 }

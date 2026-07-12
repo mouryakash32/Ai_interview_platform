@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtService {
     private final String JWT_SECREATE_KEY="mysecreatekeyisonetwothreeandfourwithotherfriendsareplaying";
-    private final Integer JWT_EXPIRATION = 30000;
+    private final Integer JWT_EXPIRATION = 3000000;
     public String getEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }

@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -46,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
             user.setName(registerReq.getName());
             user.setPassword(passwordEncoder.encode(registerReq.getPassword()));
             user.setRoles(Set.of(Roles.USER));
+            user.setStorageFolder(UUID.randomUUID().toString());
             userRepo.save(user);
             AuthRes authRes = new AuthRes();
             authRes.setMessage("Registeration successfull");
