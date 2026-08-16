@@ -15,6 +15,11 @@ public class Resume {
     private String fileName;
     private String filePath;
     private LocalDateTime uploadedAt;
+
+    @Lob()
+    @Column(columnDefinition = "TEXT")
+    private String extractText;
+
     @Enumerated(EnumType.STRING)
     private ResumeStatus Status;
 

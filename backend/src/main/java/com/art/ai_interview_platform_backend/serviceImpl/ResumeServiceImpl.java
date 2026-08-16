@@ -8,8 +8,11 @@ import com.art.ai_interview_platform_backend.entity.resumeEntity.ResumeStatus;
 import com.art.ai_interview_platform_backend.repository.ResumeRepo;
 import com.art.ai_interview_platform_backend.repository.UserRepo;
 import com.art.ai_interview_platform_backend.service.ResumeService;
+import com.art.ai_interview_platform_backend.utils.ExtractResumeInformation;
 import com.art.ai_interview_platform_backend.utils.GetLoggedInUser;
+import com.art.ai_interview_platform_backend.utils.ResumeParseService;
 import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,17 +33,22 @@ public class ResumeServiceImpl implements ResumeService {
     private final GetLoggedInUser loggedInUser;
     private final ResumeRepo resumeRepo;
     private final UserRepo userRepo;
+    private final ResumeParseService parseService;
+    private final ExtractResumeInformation extractResumeInformation;
 
-    public ResumeServiceImpl(GetLoggedInUser get, ResumeRepo resumeRepo, UserRepo userRepo) {
+    public ResumeServiceImpl(GetLoggedInUser get, ResumeRepo resumeRepo, UserRepo userRepo, ResumeParseService parseService, ExtractResumeInformation extractResumeInformation) {
         this.loggedInUser = get;
         this.resumeRepo = resumeRepo;
         this.userRepo = userRepo;
+        this.parseService = parseService;
+        this.extractResumeInformation = extractResumeInformation;
     }
 
     @Override
     public ResumeGetRes getResume() {
         User user = loggedInUser.getLoggedInUser();
         Optional<Resume> resume= resumeRepo.findByUser(user);
+        extractResumeInformation.ExtractInfo(resume.get().getExtractText());
         if(resume.isPresent()){
             Resume resume1 = resume.get();
             ResumeGetRes resumeGetRes = ResumeGetRes.builder()
@@ -57,6 +65,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     }
 
+    @Transactional
     @Override
     public ResumeUploadRes uploadResume(MultipartFile file) {
         try {
@@ -87,9 +96,9 @@ public class ResumeServiceImpl implements ResumeService {
                     existingResume.setFilePath(destination.toString());
                     existingResume.setUploadedAt(LocalDateTime.now());
                     existingResume.setStatus(ResumeStatus.UPLOADED);
-
+                    String text = parseService.extractText(destination);
+                    existingResume.setExtractText(text);
                     resumeRepo.save(existingResume);
-
                     return new ResumeUploadRes(
                             200,
                             "Resume updated successfully."
@@ -109,6 +118,8 @@ public class ResumeServiceImpl implements ResumeService {
                 resume.setFilePath(destination.toString());
                 resume.setUploadedAt(LocalDateTime.now());
                 resume.setStatus(ResumeStatus.UPLOADED);
+                String text = parseService.extractText(destination);
+                resume.setExtractText(text);
                 resumeRepo.save(resume);
 
                 return new ResumeUploadRes(
