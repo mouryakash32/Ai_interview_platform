@@ -3,6 +3,7 @@ package com.art.ai_interview_platform_backend.entity.resumeEntity;
 import com.art.ai_interview_platform_backend.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,7 @@ public class Resume {
     private ResumeStatus Status;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinColumn(name = "user_id")
     private User user;
 

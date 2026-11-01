@@ -47,9 +47,15 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public ResumeGetRes getResume() {
         User user = loggedInUser.getLoggedInUser();
-        Optional<Resume> resume= resumeRepo.findByUser(user);
-        extractResumeInformation.ExtractInfo(resume.get().getExtractText());
+        Optional<Resume> resume= null;
+        try {
+            resume = resumeRepo.findByUserId(user.getId());
+            extractResumeInformation.ExtractInfo(resume.get().getExtractText());
+        } catch (Exception e) {
+            throw new RuntimeException(e + "Exception happened at finding the user and extracting the information of the resume");
+        }
         if(resume.isPresent()){
+            System.out.println("---------------------------Resume present----------------------------------------");
             Resume resume1 = resume.get();
             ResumeGetRes resumeGetRes = ResumeGetRes.builder()
                     .fileName(resume1.getFileName())
@@ -84,7 +90,7 @@ public class ResumeServiceImpl implements ResumeService {
                 // Destination Path
                 Path destination = userDirectory.resolve(file.getOriginalFilename());
 
-                Optional<Resume> optionalResume = resumeRepo.findByUser(user);
+                Optional<Resume> optionalResume = resumeRepo.findByUserId(user.getId());
 
                 // Update Existing Resume
                 if (optionalResume.isPresent()) {
@@ -143,7 +149,7 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public ResumeGetRes downloadResume() {
         User user = loggedInUser.getLoggedInUser();
-        Optional<Resume> resume= resumeRepo.findByUser(user);
+        Optional<Resume> resume= resumeRepo.findByUserId(user.getId());
         if(resume.isPresent()){
             Resume resume1 = resume.get();
             Path path = Paths.get(resume1.getFilePath());
@@ -165,7 +171,7 @@ public class ResumeServiceImpl implements ResumeService {
     public ResumeGetRes deleteReumse() {
         System.out.println("Enter into deleteResume method");
         User user = loggedInUser.getLoggedInUser();
-        Optional<Resume> resume = resumeRepo.findByUser(user);
+        Optional<Resume> resume = resumeRepo.findByUserId(user.getId());
         if(resume.isPresent()){
             Resume resume1 = resume.get();
             Path path = Paths.get(resume1.getFilePath());

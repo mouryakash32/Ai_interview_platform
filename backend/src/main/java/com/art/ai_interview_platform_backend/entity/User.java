@@ -3,6 +3,7 @@ package com.art.ai_interview_platform_backend.entity;
 import com.art.ai_interview_platform_backend.entity.resumeEntity.Resume;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class User {
     private Set<Roles> roles;
     private String storageFolder;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "user")
     private Resume resumes;
 }

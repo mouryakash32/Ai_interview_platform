@@ -21,7 +21,7 @@ public class ResumeController {
     public ResumeController( ResumeService resumeService) {
         this.resumeService = resumeService;
     }
-    @GetMapping("/getResume")
+    @GetMapping("/getresume")
     ResponseEntity<Object>getResume(){
         ResumeGetRes resumeGetRes = resumeService.getResume();
         return ResponseEntity.status(resumeGetRes.getStatusCode()).body(resumeGetRes);

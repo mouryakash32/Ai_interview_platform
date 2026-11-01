@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class JwtService {
     private final String JWT_SECREATE_KEY="mysecreatekeyisonetwothreeandfourwithotherfriendsareplaying";
     private final Integer JWT_EXPIRATION = 3000000;
-    public String getEmail(String token) {
+    public String getUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -48,7 +48,7 @@ public class JwtService {
 
 
     public boolean isTokenValid(String token, UserDetails user) {
-        return !isExpiration(token) && user.getUsername().equals(getEmail(token));
+        return !isExpiration(token) && user.getUsername().equals(getUsername(token));
     }
 
     private SecretKey secretKey(){

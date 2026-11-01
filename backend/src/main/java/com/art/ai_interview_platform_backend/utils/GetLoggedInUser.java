@@ -17,7 +17,7 @@ public class GetLoggedInUser {
 
     public User getLoggedInUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email =  authentication.getName();
-        return userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found Exception"));
+        String name =  authentication.getName();
+        return userRepo.findByName(name).orElseThrow(()->new UsernameNotFoundException("User not found Exception"));
     }
 }

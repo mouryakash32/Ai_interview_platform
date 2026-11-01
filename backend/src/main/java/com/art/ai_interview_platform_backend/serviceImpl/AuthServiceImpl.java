@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthRes register(RegisterReq registerReq) {
         try{
-            Optional<User> user2 =  userRepo.findByEmail(registerReq.getEmail());
+            Optional<User> user2 =  userRepo.findByName(registerReq.getEmail());
             if(user2.isPresent()){
                 throw new RuntimeException("Email is not unique");
             }
@@ -65,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthRes login(LoginReq loginReq) {
         try{
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginReq.getEmail(), loginReq.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginReq.getName(), loginReq.getPassword()));
             System.out.println("Error while authenticating");
             UserDetails userDetails =(UserDetails) authentication.getPrincipal();
             String token = jwtService.generateToken(userDetails);
